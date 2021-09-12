@@ -1,0 +1,317 @@
+<html>
+<head>
+	<title>Smart Video Notes</title>
+</head>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.12.min.js"></script>
+<script src="index.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/lib/axios/dist/axios.standalone.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/lib/CryptoJS/rollups/hmac-sha256.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/lib/CryptoJS/rollups/sha256.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/lib/CryptoJS/components/hmac.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/lib/CryptoJS/components/enc-base64.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/lib/url-template/url-template.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/lib/apiGatewayCore/sigV4Client.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/lib/apiGatewayCore/apiGatewayClient.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/lib/apiGatewayCore/simpleHttpClient.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/lib/apiGatewayCore/utils.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/apigClient.js"></script>
+ <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link href='https://fonts.googleapis.com/css?family=Orelega+One|Arvo|Assistant|Rajdhani' rel='stylesheet'>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300..900&display=swap" rel="stylesheet">
+	<style>
+		.space{
+			padding: 15px;
+		}
+
+		th {
+		  text-align: center;
+		  padding: 8px;
+		}
+      
+      .tableFixHead {
+        overflow-y: auto;
+        height: 300px;
+        margin-top: 
+      }
+
+
+      .tableFixHead thead th {
+        position: sticky;
+        top: 0;
+      }
+
+      th {
+        background-color: whitesmoke;
+      }
+
+		li{
+			font-family: "Rajdhani";
+			font-size: 18pt;
+		}
+
+		.vidTitle{
+			padding-top: 3px;
+			font-family: "Assistant";
+			font-size: 14pt;
+		}
+
+		.header{
+	        /*position: absolute;
+	        width: 100%;*/
+	        left: 0;
+	        text-align: center;
+	        font-size: 24pt;
+	        font-family: "Libre Franklin";
+	        font-weight: 900;
+    	}
+
+    @supports (font-variation-settings: "wght" 900) {
+    .header{
+      font-family: 'Libre Franklin';
+      font-weight: 900;
+    }    	
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  transition: top 0.4s, opacity 0.4s;
+}
+
+/* Modal Content/Box */
+.modal-content {
+	font-family: "Libre Franklin";
+	font-weight: 400;
+	font-size: 14pt;
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 60%; /* Could be more or less, depending on screen size */
+}
+
+  
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.navbar-nav > li{
+  padding-left:30px;
+}
+body{
+	background-image: url('https://evansmedicalgroup.com/wp-content/uploads/2017/02/Pencil-Background-Image.jpg');
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: 100% 100%;
+}
+
+.bgc{
+	background-color: white;
+}
+
+  @supports (font-variation-settings: "wght" 400) {
+    .modal-content, thead{
+      font-family: 'Libre Franklin';
+      font-weight: 400;
+    }
+
+#save{
+	width:80pt;
+	margin:0 auto;
+	border-radius: 4px;
+	background-color: rgb(247, 248, 250);
+	height: 24pt;
+	font-size: 12pt;
+}
+
+.s_hover{
+	background-color: white;	
+}
+
+#videoLbl{
+	font-family: "Libre Franklin";
+	font-size: 20px;
+	font-weight: 600;
+/*	padding: 10px;*/
+}
+
+ @supports (font-variation-settings: "wght" 600) {
+    #videoLbl{
+      font-family: 'Libre Franklin';
+      font-weight: 600;
+    }
+
+thead{
+	font-family: "Libre Franklin";
+	font-weight: 400;
+	font-size: 16px;
+	font-weight: bolder;
+	padding-top: 0px;
+	margin-top: 0px;
+}
+
+::placeholder{
+	font-size:14pt;
+}
+
+#cloudImg img{
+	width: 500px;
+
+}
+
+button{
+	border-radius: 4px;
+}
+
+.hide{
+	display: "block";
+}
+
+table {
+		  border-collapse: collapse;
+		  width: 100%;
+		}
+
+td {
+	border: 1px solid #dddddd;
+	text-align: left;
+	padding: 8px;
+	font-family: "Rajdhani";
+}
+
+
+
+</style>
+<body>
+
+<!-- Nav Bar and Upload Form -->
+<div id="myModal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <br>
+	<b>Upload Video:</b> &nbsp<input type="file" id="upload" style="width:100pt;margin:0 auto;border-radius: 4px">
+	<br>
+	<b>Video Title:</b> &nbsp<input type="text" id="name">
+	<br>
+		<button id="uploadSubmit" disabled=true style="width:100pt;margin:0 auto;border-radius: 4px"><b>Upload</b></button>
+  </div>
+</div>
+
+<!-- Word Cloud -->
+<div id="cloud" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <div id="cloudImg" style="text-align: center;"></div>
+</div>
+</div>
+	
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand header" href="https://videonotes-site.s3.amazonaws.com/home.html">Smart Video Library</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+  	<ul class="navbar-nav mr-auto">
+  	</ul>
+    <ul class="navbar-nav mr-auto navbar-right">
+    	<li class="nav-item nav-link" style="padding-left: 10px;">
+  			Search: <input type="text" id="search" style="font-family: arial" placeholder="Search Video Transcript">
+  		</li>
+    	<li class="nav-item" style="padding-left: 10px;">
+        <a class="nav-link" href="#" id="openWordCloud"><i class="fa fa-lightbulb-o" style="font-size:18px;"></i>&nbspWord Cloud</a>
+      </li>
+      <li class="nav-item" style="padding-left: 10px;">
+        <a class="nav-link" href="#" id="openUpload"><i class="fa fa-upload" style="font-size:18px;"></i>&nbsp&nbspUpload</a>
+      </li>
+	      <li class="nav-item" style="padding-left: 10px;">
+	            <a class="nav-link" href="#" id="logout"><i class="fa fa-sign-out" style="font-size:18px;"></i>
+	            	&nbsp<span id="lUser"></span>&nbspLogout</a>
+	      </li>      
+    </ul>
+   </div>
+</nav>
+
+	<div class='container-fluid'>
+		<div class = "row space">
+			<div class = "col-md-7">
+				<div class = "row">
+					<video width="100%" id="video" controls>
+					</video>
+				</div>
+				<div class="row space" style="padding-left:0pt;" id="videoLbl"></div>
+				<div class = "row space" style="padding-left:0pt;padding-right:0pt">
+					<textarea rows="5" cols="50" id="notesText" placeholder=" Type Notes Here"></textarea>
+				</div>
+				<div class="row space" style="padding:0pt;">
+					<button id="save" disabled=true style="width:100pt;margin:0pt;border-radius: 4px">Save</button>
+				</div>			
+			</div>
+			<div class='col-md-1'></div>
+			<div class = "col-md-4">
+					<div class = "row space">
+					<div class = "tableFixHead" style="width:100%;">
+					<table style="width:100%;" id="displayNotes" class="bgc">
+						<thead>
+						<tr>
+							<th>Notes</th>
+							<th>Timestamp</th>
+							<th>Delete</th>
+						</tr>
+						</thead>
+					</table></div>
+				</div>	
+				<div class = "row space">
+					<table style="width:100%;" id="noSearch" class="bgc hide">
+						<thead>
+							<tr><th style="text-align: center;">No Search Results Found</th></tr>
+						</thead>
+					</table>
+
+					<div class = "tableFixHead" style="width:100%">
+					<table style="width:100%;" id="displaySearch" class="bgc hide">
+						<thead>
+						<tr>
+							<th>Search Results</th>
+							<th>Timestamp</th>
+						</tr>
+						</thead>
+						<tbody>
+
+						</tbody>
+					</table>
+				</div>
+				</div>								
+			</div>
+		</div>
+	</div>
+</body>
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+</html>

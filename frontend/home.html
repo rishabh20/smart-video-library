@@ -1,0 +1,177 @@
+<html>
+<head>
+	<title>Smart Video Notes</title>
+</head>
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://code.jquery.com/ui/1.12.0/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+<script src="https://sdk.amazonaws.com/js/aws-sdk-2.1.12.min.js"></script>
+<script src="home.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/lib/axios/dist/axios.standalone.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/lib/CryptoJS/rollups/hmac-sha256.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/lib/CryptoJS/rollups/sha256.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/lib/CryptoJS/components/hmac.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/lib/CryptoJS/components/enc-base64.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/lib/url-template/url-template.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/lib/apiGatewayCore/sigV4Client.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/lib/apiGatewayCore/apiGatewayClient.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/lib/apiGatewayCore/simpleHttpClient.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/lib/apiGatewayCore/utils.js"></script>
+<script type="text/javascript" src="apiGateway-js-sdk/apigClient.js"></script>
+ <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"crossorigin="anonymous">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link href='https://fonts.googleapis.com/css?family=Orelega+One|Arvo|Assistant|Rajdhani' rel='stylesheet'>
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Franklin:wght@300..900&display=swap" rel="stylesheet">
+	<style>
+		.space{
+			padding: 15px;
+		}
+
+		li{
+			font-family: "Rajdhani";
+			font-size: 18pt;
+		}
+
+		.vidTitle{
+			padding-top: 3px;
+			font-family: "Assistant";
+			font-size: 14pt;
+		}
+
+		.header{
+	        /*position: absolute;
+	        width: 100%;*/
+	        left: 0;
+	        text-align: center;
+	        font-size: 24pt;
+	        font-family: "Libre Franklin";
+	        font-weight: 900;
+    	}
+
+		.grid-container {
+		  display: grid;
+		  grid-template-columns: auto auto auto;
+		  padding: 10px;
+		  width: 100%;
+		}
+
+		.grid-item {
+		  padding: 10px;
+		  text-align: center;
+		  width: 100%;
+		}
+    
+    @supports (font-variation-settings: "wght" 900) {
+    .header{
+      font-family: 'Libre Franklin';
+      font-weight: 900;
+    }    	
+/* The Modal (background) */
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0,0,0); /* Fallback color */
+  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  transition: top 0.4s, opacity 0.4s;
+}
+
+/* Modal Content/Box */
+.modal-content {
+	font-family: "Libre Franklin";
+	font-weight: 400;
+	font-size: 14pt;
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 60%; /* Could be more or less, depending on screen size */
+}
+
+    @supports (font-variation-settings: "wght" 400) {
+    .modal-content{
+      font-family: 'Libre Franklin';
+      font-weight: 400;
+    }  
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.navbar-nav > li{
+  padding-left:30px;
+}
+
+body{
+	background-image: url('https://evansmedicalgroup.com/wp-content/uploads/2017/02/Pencil-Background-Image.jpg');
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+	background-size: 100% 100%;
+}
+
+.bgc{
+	background-color: white;
+}
+
+</style>
+
+<body>
+<!-- Nav Bar and Upload Form -->
+
+<div id="myModal" class="modal">
+  <!-- Modal content -->
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <br>
+	<b>Upload Video:</b> &nbsp<input type="file" id="upload" style="border-radius: 4px;">
+	<br>
+	<b>Video Title:</b> &nbsp<input type="text" id="name">
+	<br>
+		<button id="uploadSubmit" disabled=true style="width:100pt;margin:0 auto;border-radius: 4px"><b>Upload</b></button>
+  </div>
+</div>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <a class="navbar-brand header" href="http://videonotes-site.s3.amazonaws.com/home.html">Smart Video Library</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-right navbar-right">
+      <li class="nav-item">
+        <a class="nav-link" href="#" id="openUpload"><i class="fa fa-upload" style="font-size:18px;"></i>&nbsp&nbspUpload</a>
+      </li>
+	      <li class="nav-item">
+				<a class="nav-link" href="#" id="logout"><i class="fa fa-sign-out" style="font-size:18px;"></i>
+	            	&nbsp<span id="lUser"></span>&nbspLogout</a>
+	      </li>      
+    </ul>
+   </div>
+</nav>
+
+<div class="grid-container" id="thumbnails"></div>
+
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/all.js">
+	
+</script>
+</body>
+</html>
