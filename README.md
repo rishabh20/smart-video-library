@@ -5,4 +5,4 @@ A video library that allows users to search through videos and add notes with ti
 Detailed information on the system is explained [here](https://github.com/rishabh20/smart-video-library/blob/main/ProjectReport.pdf).
 
 # Demo
-A video demo for the project is present [here](https://www.youtube.com/watch?v=Tf_V9nPla9s).
+A video demo for the project is present [here](https://www.youtube.com/watch?v=kG0T1_lqxa4).
