@@ -2,6 +2,9 @@
 A video library that allows users to search through videos and add notes with timestamps for future reference.
 
 # Design & Architecture
+
+![Architecture](/images/architectureDiagram_v7.png)
+
 Detailed information on the system is explained [here](https://github.com/rishabh20/smart-video-library/blob/main/ProjectReport.pdf).
 
 # Demo
